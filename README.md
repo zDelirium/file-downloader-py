@@ -16,5 +16,6 @@ Will decide later on the program flow and features.
 3. No user input for now
 
 ## Some dependencies
-- macOS and Linux compatibility
+- macOS and Linux compatibility (maybe compatible with Windows if a bash shell is used i.e. *Git Bash*)
 - subprocess module
+- os module
