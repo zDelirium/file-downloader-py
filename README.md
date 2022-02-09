@@ -19,6 +19,7 @@ Maybe make it a GUI app if I put my mind into it.
 4. Determine download directory
 
 **TODO**
+
 5. Input file name and url for each file
 6. Download the files
 7. Ask user if they want to go again. If so, go back to step **3**. Else, quit.
