@@ -1,15 +1,29 @@
+from re import T
 import subprocess
 import os
 
-subprocess.run('clear')
+'''
+Validate that the user can properly answers yes/no questions
+'''
+def validate_yes_no_answer(init_question, yes_no_answers=['y', 'n']):
+    user_input = input(init_question)
+    while user_input not in yes_no_answers:
+        user_input = input('Please enter \'y\' (yes) or \'n\' (no): ')
+    return user_input
 
+
+'''
+Start of program
+'''
 # Welcome message
+subprocess.run('clear')
 welcome_message = '\nHello ' + os.environ['USER'] + "!\n\n" + 'This program will let you downloads multiple files at once in your local machine using the curl command.\n'
 
 print(welcome_message)
 
 # Ask user if they want to proceed or not
-user_proceed_input = input('Are you ready to proceed? (y/n) ')
+user_proceed_input = validate_yes_no_answer('Are you ready to proceed? (y/n) ')
+    
 
 while user_proceed_input is 'y':
     
@@ -18,11 +32,11 @@ while user_proceed_input is 'y':
     
     # Ask user if they want to continue with the Downloads directory
     print('\nBy default, the files will be downloaded in ' + download_dir + ' folder')
-    user_dir_input = input('Do you want to continue with this directory? (y/n) ')
+    user_dir_input = validate_yes_no_answer('Do you want to continue with this directory? (y/n) ')
 
     # Ask user for alternate directory if not
     if user_dir_input is 'n':
-        user_dir_input = input('\nPlease enter the desired directory path with a \"/\" at the beginning for a path from ' +  str(os.environ['HOME']) + '\nor without it for a path from' + os.getcwd() + ' :\n')
+        user_dir_input = input('\nPlease enter the desired directory path with a \"/\" at the beginning for a path from ' +  str(os.environ['HOME']) + '\nor without it for a path from ' + os.getcwd() + ' :\n')
         if user_dir_input[0] is '/':
             download_dir = str(os.environ['HOME']) + user_dir_input 
         else:
@@ -34,11 +48,12 @@ while user_proceed_input is 'y':
     # TODO Prompt user to enter curl command arguments
     
     # TODO Implement curl command
+    # print("\n\nDownload has finished!\n\n")
     
     # TODO Ask if user wants to proceed again
-    user_proceed_input = 'n'
+    user_proceed_input = validate_yes_no_answer('Do you want to try again? (y/n) ')
+    
 
-# TODO Maybe be able to choose the destination folder (like Downloads for example) 
 '''
 sut_url = 'https://static.wikia.nocookie.net/iz-one/images/4/4c/One-reeler_Digital.jpg'
 sut_filename = 'izone-pic.jpg'
@@ -58,4 +73,4 @@ args = ['curl', curl_flag, sut_filename, sut_url]
 '''
 
 # Closing message
-print("\n\nSee you next time!\n\n\n")
+print("\n\nSee you next time!\n\n")
