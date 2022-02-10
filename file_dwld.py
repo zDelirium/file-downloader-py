@@ -1,4 +1,3 @@
-from re import T
 import subprocess
 import os
 
@@ -50,9 +49,11 @@ while user_proceed_input is 'y':
     # TODO Implement curl command
     # print("\n\nDownload has finished!\n\n")
     
-    # TODO Ask if user wants to proceed again
+    # Ask if user wants to proceed again
     user_proceed_input = validate_yes_no_answer('Do you want to try again? (y/n) ')
     
+# Closing message
+print("\n\nSee you next time!\n\n")
 
 '''
 sut_url = 'https://static.wikia.nocookie.net/iz-one/images/4/4c/One-reeler_Digital.jpg'
@@ -71,6 +72,3 @@ args = ['curl', curl_flag, sut_filename, sut_url]
 # Execute the curl command
 # subprocess.Popen(args, cwd='output').wait()
 '''
-
-# Closing message
-print("\n\nSee you next time!\n\n")
