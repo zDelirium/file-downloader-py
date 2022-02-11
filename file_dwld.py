@@ -2,6 +2,17 @@ import subprocess
 import os
 
 '''
+Clear console and display welcoming message
+'''
+
+def display_welcome_message():
+    # Welcome message
+    subprocess.run('clear')
+    welcome_message = '\nHello ' + os.environ['USER'] + "!\n\n" + 'This program will let you downloads multiple files at once in your local machine using the curl command.\n'
+
+    print(welcome_message)
+
+'''
 Validate that the user can properly answers yes/no questions
 '''
 def validate_yes_no_answer(init_question, yes_no_answers=['y', 'n']):
@@ -11,21 +22,7 @@ def validate_yes_no_answer(init_question, yes_no_answers=['y', 'n']):
     return user_input
 
 
-'''
-Start of program
-'''
-# Welcome message
-subprocess.run('clear')
-welcome_message = '\nHello ' + os.environ['USER'] + "!\n\n" + 'This program will let you downloads multiple files at once in your local machine using the curl command.\n'
-
-print(welcome_message)
-
-# Ask user if they want to proceed or not
-user_proceed_input = validate_yes_no_answer('Are you ready to proceed? (y/n) ')
-    
-
-while user_proceed_input is 'y':
-    
+def select_dlwd_path():
     # Get Downloads folder directory
     download_dir = str(os.environ['HOME']) + '/Downloads'
     
@@ -35,7 +32,7 @@ while user_proceed_input is 'y':
 
     # Ask user for alternate directory if not
     if user_dir_input is 'n':
-        user_dir_input = input('\nPlease enter the desired directory path with a \"/\" at the beginning for a path from ' +  str(os.environ['HOME']) + '\nor without it for a path from ' + os.getcwd() + ' :\n')
+        user_dir_input = input('\nPlease enter the desired directory path with a \"/\" at the beginning for a path from ' +  str(os.environ['HOME']) + '\nor without it for a path from the current working directory' + os.getcwd() + ' :\n')
         if user_dir_input[0] is '/':
             download_dir = str(os.environ['HOME']) + user_dir_input 
         else:
@@ -44,16 +41,43 @@ while user_proceed_input is 'y':
     # Print download directory
     print('\nThe files will be downloaded in ' + download_dir + '\n')
     
+    return download_dir
+
+'''
+Display closing message
+'''
+def display_closing_message():
+    # Closing message
+    print("\n\nSee you next time!\n\n")
+
+'''
+START of program
+'''
+display_welcome_message()
+
+# Ask user if they want to proceed or not
+user_proceed_input = validate_yes_no_answer('Are you ready to proceed? (y/n) ')
+
+while user_proceed_input is 'y':
+    
+    # Select download destination folder
+    download_dir = select_dlwd_path()
+    
     # TODO Prompt user to enter curl command arguments
     
     # TODO Implement curl command
+    # https://www.geeksforgeeks.org/curl-command-in-linux-with-examples/?ref=lbp
     # print("\n\nDownload has finished!\n\n")
     
     # Ask if user wants to proceed again
     user_proceed_input = validate_yes_no_answer('Do you want to try again? (y/n) ')
     
-# Closing message
-print("\n\nSee you next time!\n\n")
+
+display_closing_message()
+
+'''
+END of program
+'''
 
 '''
 sut_url = 'https://static.wikia.nocookie.net/iz-one/images/4/4c/One-reeler_Digital.jpg'
