@@ -4,7 +4,6 @@ import os
 '''
 Clear console and display welcoming message
 '''
-
 def display_welcome_message():
     # Welcome message
     subprocess.run('clear')
@@ -21,7 +20,9 @@ def validate_yes_no_answer(init_question, yes_no_answers=['y', 'n']):
         user_input = input('Please enter \'y\' (yes) or \'n\' (no): ')
     return user_input
 
-
+'''
+Prompts user to choose the download path of the files
+'''
 def select_dlwd_path():
     # Get Downloads folder directory
     download_dir = str(os.environ['HOME']) + '/Downloads'
@@ -32,8 +33,10 @@ def select_dlwd_path():
 
     # Ask user for alternate directory if not
     if user_dir_input is 'n':
-        user_dir_input = input('\nPlease enter the desired directory path with a \"/\" at the beginning for a path from ' +  str(os.environ['HOME']) + '\nor without it for a path from the current working directory' + os.getcwd() + ' :\n')
-        if user_dir_input[0] is '/':
+        user_dir_input = input('\nPlease enter the desired directory path with a \"/\" at the beginning for a path from ' +  str(os.environ['HOME']) + '\nor without it for a path from the current working directory ' + os.getcwd() + '\nTo download in current working directory, leave it blank :\n')
+        if not user_dir_input:
+            download_dir = os.getcwd()
+        elif user_dir_input[0] is '/':
             download_dir = str(os.environ['HOME']) + user_dir_input 
         else:
             download_dir = os.getcwd() + "/" + user_dir_input
