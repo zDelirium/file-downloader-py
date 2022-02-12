@@ -1,6 +1,5 @@
 import subprocess
 import os
-import urllib
 
 '''
 Clear console and display welcoming message
@@ -10,17 +9,22 @@ def display_welcome_message():
     subprocess.run('clear')
     welcome_message = '\nHello {}!\n\nThis program will let you downloads multiple files at once in your local machine using the curl command.\n'.format(
         os.environ['USER'])
-
+    
+    welcome_message = '{}Tip: For all yes/no answers, you can simply leave it blank to answer yes :)\n'.format(welcome_message)
     print(welcome_message)
 
 
 '''
-Validate that the user can properly answers yes/no questions
+Validate that the user can properly answers yes/no questions. User can also answer yes by not entering anything
 '''
 def validate_yes_no_answer(init_question, yes_no_answers=['y', 'n']):
     user_input = input(init_question).strip()
+    if not user_input:
+        user_input = yes_no_answers[0]
     while user_input not in yes_no_answers:
         user_input = input('Please enter \'y\' (yes) or \'n\' (no): ').strip()
+        if not user_input:
+            user_input = yes_no_answers[0]
     return user_input
     
 
@@ -39,12 +43,12 @@ def select_dlwd_path():
         'Do you want to continue with this directory? (y/n) ')
 
     # Ask user for alternate directory if not
-    if user_dir_input is 'n':
+    if user_dir_input == 'n':
         user_dir_input = input(
             '\nPlease enter the desired directory path with a \"/\" at the beginning for a path from {}\nor without it for a path from the current working directory {}\nTo download in current working directory, leave it blank :\n'.format(os.environ[home_env_var], os.getcwd())).strip()
         if not user_dir_input:
             download_dir = os.getcwd()
-        elif user_dir_input[0] is '/':
+        elif user_dir_input[0] == '/':
             download_dir = '{}{}'.format(home_env_var, user_dir_input)
         else:
             download_dir = '{}/{}'.format(os.getcwd(), user_dir_input)
@@ -65,14 +69,15 @@ def get_all_curl_cmd_args():
     print('It is now time to add the files to download. If you do not want to name the file, leave its name blank. Else make sure you put the right extension at the end.')
     print('Note that for now the app does not ensure that there are no duplicate file names, so files with the same name may get overwritten.\n')
 
-    while user_continue_input is 'y':
+    while user_continue_input == 'y':
         args = []
         file_nb = len(commands) + 1
         args.append('curl')
         
         # Input download https or http url link
+        # TODO may want to do stronger checks
         url_link = input('Enter the http or https url link of file {}:\n'.format(file_nb)).strip()
-        while not url_link.startswith('https://') or not url_link.startswith('http://'):
+        while not url_link.startswith('https://') and not url_link.startswith('http://'):
             url_link = input('Please enter a http or https url:\n').strip()
             
         # Input file name if there is any. 
@@ -113,7 +118,7 @@ def display_file_names(commands):
     # Get only name of files
     file_names = []
     for cmd in commands:
-        if cmd[1] is '-O':
+        if cmd[1] == '-O':
             file_names.append(cmd[2].split('/')[-1])
         else:
             file_names.append(cmd[2])
@@ -148,7 +153,7 @@ display_welcome_message()
 # Ask user if they want to proceed or not
 user_proceed_input = validate_yes_no_answer('Are you ready to proceed? (y/n) ')
 
-while user_proceed_input is 'y':
+while user_proceed_input == 'y':
 
     # Select download destination folder
     download_dir = select_dlwd_path()
