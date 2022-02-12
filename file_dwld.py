@@ -1,5 +1,6 @@
 import subprocess
 import os
+import urllib
 
 '''
 Clear console and display welcoming message
@@ -21,7 +22,7 @@ def validate_yes_no_answer(init_question, yes_no_answers=['y', 'n']):
     while user_input not in yes_no_answers:
         user_input = input('Please enter \'y\' (yes) or \'n\' (no): ').strip()
     return user_input
-
+    
 
 '''
 Prompts user to choose the download path of the files
@@ -55,26 +56,31 @@ def select_dlwd_path():
 
 
 '''
-Get arguments for curl command. 
+Get arguments for all curl commands. 
 '''
-def get_curl_args():
-    args = []
-    nb_of_files = 0
+def get_all_curl_cmd_args():
+    commands = []
     user_continue_input = 'y'
 
-    print('It is now time to add the files to download. If you do not want to name the file, leave its name blank. Else make sure you put the right extension at the end.\n')
+    print('It is now time to add the files to download. If you do not want to name the file, leave its name blank. Else make sure you put the right extension at the end.')
+    print('Note that for now the app does not ensure that there are no duplicate file names, so files with the same name may get overwritten.\n')
 
-    # TODO Modify code so that args is a 2d list that contains each curl command for a file each
-    while user_continue_input:
-        nb_of_files += 1
-        # Input file name if there is any
-        file_name = input('Enter the name of file {}:\n'.format(nb_of_files)).strip()
-
-        # Input download link
-        url_link = input('Enter the download url link of file {}:\n'.format(nb_of_files)).strip()
-        while not url_link.startswith('https://'):
-            url_link = input('Please enter a https url link:\n').strip()
+    while user_continue_input is 'y':
+        args = []
+        file_nb = len(commands) + 1
+        args.append('curl')
+        
+        # Input download https or http url link
+        url_link = input('Enter the http or https url link of file {}:\n'.format(file_nb)).strip()
+        while not url_link.startswith('https://') or not url_link.startswith('http://'):
+            url_link = input('Please enter a http or https url:\n').strip()
             
+        # Input file name if there is any. 
+        # TODO Make sure that the user does not name any file the same
+        # Make sure the user does not enter / in the file-name
+        file_name = input('Enter the name of file {}:\n'.format(file_nb)).strip()
+        while '/' in file_name:
+            file_name = input('Please make sure to not enter a directory in the file name:\n').strip()
 
         # Add to approriate args to curl command
         if file_name:
@@ -83,17 +89,48 @@ def get_curl_args():
         else:
             args.append('-O')
         args.append(url_link)
-
-        # TODO Ask user if they want to continue
-        user_continue_input = validate_yes_no_answer('Do you want to continue adding files? (y/n) ')
-
-        # TODO Have the user verify if all files are there. If not, continue adding files
-        #user_continue_input = 'n'
         
-    print('The program will download {}.\n'.format(nb_of_files))
+        # Add curl command to the array of curl commands
+        commands.append(args)
 
-    # Return args and nb of files
-    return args, nb_of_files
+        # Ask user if they want to continue
+        user_continue_input = validate_yes_no_answer('\nDo you want to continue adding files? (y/n) ')
+        print()
+
+    print('The program will download the following {} files:\n'.format(len(commands)))
+
+    # Display name of files to be downloaded
+    display_file_names(commands)
+
+    print()
+    # Return all commands and nb of files
+    return commands
+
+'''
+Display the name of all files to be downloaded to the user in 2 columns
+'''
+def display_file_names(commands):
+    # Get only name of files
+    file_names = []
+    for cmd in commands:
+        if cmd[1] is '-O':
+            file_names.append(cmd[2].split('/')[-1])
+        else:
+            file_names.append(cmd[2])
+    
+    # Display file names to be downloaded to user. 2 file names per row
+    iterator = 0
+    max_len = max(len(file_name) for file_name in file_names)
+    while iterator < len(file_names):
+        # Print a row
+        if iterator % 2 == 1:
+            print('{}{}'.format(file_names[iterator - 1].ljust(max_len + 5), file_names[iterator]))
+            
+        # Print the last leftover element if we have an odd number of files
+        if iterator == len(file_names) - 1 and iterator % 2 == 0:
+            print(file_names[iterator])
+        
+        iterator += 1
 
 
 '''
@@ -116,13 +153,12 @@ while user_proceed_input is 'y':
     # Select download destination folder
     download_dir = select_dlwd_path()
 
-    # TODO Prompt user to enter curl command arguments
-    args, nb_of_files = get_curl_args()
+    # Prompt user to enter all args for all curl commands
+    commands = get_all_curl_cmd_args()
 
     # TODO Implement curl command (must decide between run and popen)
     # https://www.geeksforgeeks.org/curl-command-in-linux-with-examples/?ref=lbp
-    # print("\n\nDownload has finished!\n\n")
-    # subprocess.run(args).returncode
+
 
     # Ask if user wants to proceed again
     user_proceed_input = validate_yes_no_answer(
