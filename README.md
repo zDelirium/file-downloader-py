@@ -6,9 +6,7 @@
 
 This Python command-line program is supposed to be able to download multiple files using the shell *curl* command.
 
-Runs on Python 3.5 preferablym, probaly at least Python 3.2.
-
-Maybe make it a GUI app if I put my mind into it.
+Runs on Python 3.5 preferably, probably at least Python 3.2
 
 ## Use
 1. Open shell in macOS or Linux (or a bash compatible shell on Windows such as *MINGW64*)
@@ -22,4 +20,4 @@ Maybe make it a GUI app if I put my mind into it.
 **TODO**
 - Display which files have failed to download
 - Perhaps make a stronger check for the validity of the url link
-
+- Make it a GUI app (**very big maybe?**)
