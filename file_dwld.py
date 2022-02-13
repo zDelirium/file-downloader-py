@@ -1,4 +1,3 @@
-from distutils import command
 import subprocess
 import os
 
@@ -136,20 +135,30 @@ def display_file_names(commands):
         
         iterator += 1
 
-# '''
-# Execute all curl commands and verify their status
-# '''
-# def execute_curl(commands, download_dir): 
-#     for args in commands:
-#         file_name = None
-        
-#         if args[1] == '-O':
-#             file_name = args[2].split('/')[-1]
-#         else: 
-#             file_name = args[2]
-        
-#         # if subprocess.Popen(args, cwd=download_dir).wait() == 0:
+'''
+Execute all curl commands and verify their status
+'''
+def execute_curl(commands, download_dir):
+    print('\nBegin to download all files to {}\n'.format(download_dir))
+    
+    # Attempt file downloads
+    # TODO Test this
+    failed_file_downloads_names = []
+    counter = 0
+    for cmd in commands:
+        counter += 1
+        current_file_name = cmd[2].split('/')[-1]
+        print('Attempting to download {} in {}\t({}/{})'.format(current_file_name, download_dir, counter, len(commands)))
+        if subprocess.Popen(cmd, cwd=download_dir).wait() == 0:
+            print('Succesfully downloaded {} in {}\t({}/{})\n'.format(current_file_name, download_dir, counter, len(commands)))
+        else:
+            failed_file_downloads_names.append(current_file_name)
+            print('Failed to download {} in {}\t({}/{})\n'.format(current_file_name, download_dir, counter, len(commands)))
             
+    # TODO Display if all downloads were successful 
+    # TODO If not, display how many files were successfully downloaded and show which ones were not   
+
+
         
 
 '''
@@ -177,7 +186,7 @@ while user_proceed_input == 'y':
 
     # TODO Implement curl command (must decide between run and popen)
     # https://www.geeksforgeeks.org/curl-command-in-linux-with-examples/?ref=lbp
-
+    execute_curl(commands, download_dir)
 
     # Ask if user wants to proceed again
     user_proceed_input = validate_yes_no_answer(
