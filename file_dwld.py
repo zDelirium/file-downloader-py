@@ -1,3 +1,4 @@
+from distutils import command
 import subprocess
 import os
 
@@ -118,10 +119,8 @@ def display_file_names(commands):
     # Get only name of files
     file_names = []
     for cmd in commands:
-        if cmd[1] == '-O':
-            file_names.append(cmd[2].split('/')[-1])
-        else:
-            file_names.append(cmd[2])
+        file_names.append(cmd[2].split('/')[-1])
+
     
     # Display file names to be downloaded to user. 2 file names per row
     iterator = 0
@@ -137,6 +136,21 @@ def display_file_names(commands):
         
         iterator += 1
 
+# '''
+# Execute all curl commands and verify their status
+# '''
+# def execute_curl(commands, download_dir): 
+#     for args in commands:
+#         file_name = None
+        
+#         if args[1] == '-O':
+#             file_name = args[2].split('/')[-1]
+#         else: 
+#             file_name = args[2]
+        
+#         # if subprocess.Popen(args, cwd=download_dir).wait() == 0:
+            
+        
 
 '''
 Display closing message
