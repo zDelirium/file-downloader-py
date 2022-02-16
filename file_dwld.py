@@ -18,6 +18,7 @@ def display_welcome_message():
 Validate that the user can properly answers yes/no questions. User can also answer yes by not entering anything
 '''
 def validate_yes_no_answer(init_question, yes_no_answers=['y', 'n']):
+    # Get user answer
     user_input = input(init_question).strip()
     if not user_input:
         user_input = yes_no_answers[0]
@@ -25,7 +26,9 @@ def validate_yes_no_answer(init_question, yes_no_answers=['y', 'n']):
         user_input = input('Please enter \'y\' (yes) or \'n\' (no): ').strip()
         if not user_input:
             user_input = yes_no_answers[0]
-    return user_input
+    
+    # Transforming to boolean        
+    return user_input == yes_no_answers[0]
     
 
 '''
@@ -43,7 +46,7 @@ def select_dlwd_path():
         'Do you want to continue with this directory? (y/n) ')
 
     # Ask user for alternate directory if not
-    if user_dir_input == 'n':
+    if not user_dir_input:
         user_dir_input = input(
             '\nPlease enter the desired directory path with a \"/\" at the beginning for a path from {}\nor without it for a path from the current working directory {}\nTo download in current working directory, leave it blank :\n'.format(os.environ[home_env_var], os.getcwd())).strip()
         if not user_dir_input:
@@ -68,8 +71,9 @@ def get_all_curl_cmd_args():
     print('It is now time to add the files to download. If you do not want to name the file, leave its name blank. Else make sure you put the right extension at the end.')
     print('Note that for now the app does not ensure that there are no duplicate file names, so files with the same name may get overwritten.\n')
 
-    user_stops = 'n'
-    while user_stops == 'n':
+    user_stops = False
+    while not user_stops:
+        # Prompt user to enter file links and info
         enter_files_info(commands)
 
         print('The program will download the following {} file(s):\n'.format(len(commands)))
@@ -87,8 +91,8 @@ def get_all_curl_cmd_args():
 Prompt user to enter file names and links
 '''
 def enter_files_info(commands):
-    user_continue_input = 'y'
-    while user_continue_input == 'y':
+    user_continue_input = True
+    while user_continue_input:
         args = []
         file_nb = len(commands) + 1
         args.append('curl')
@@ -149,6 +153,8 @@ def display_file_names(commands):
 Execute all curl commands and verify their status
 '''
 def execute_curl(commands, download_dir):
+    # TODO create destination folder if it does not exist
+    
     print('\nBegin to download all files to {}\n'.format(download_dir))
     
     # Attempt file downloads
@@ -185,7 +191,7 @@ display_welcome_message()
 # Ask user if they want to proceed or not
 user_proceed_input = validate_yes_no_answer('Are you ready to proceed? (y/n) ')
 
-while user_proceed_input == 'y':
+while user_proceed_input:
 
     # Select download destination folder
     download_dir = select_dlwd_path()
@@ -195,7 +201,7 @@ while user_proceed_input == 'y':
 
     # Implement curl command (must decide between run and popen)
     # https://www.geeksforgeeks.org/curl-command-in-linux-with-examples/?ref=lbp
-    if validate_yes_no_answer('Do you want to download now? If not, you can start from anew. (y/n) ') == 'y':
+    if validate_yes_no_answer('Do you want to download now? If not, you can start from anew. (y/n) '):
         execute_curl(commands, download_dir)
 
     # Ask if user wants to proceed again

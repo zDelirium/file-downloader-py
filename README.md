@@ -13,10 +13,11 @@ Runs on Python 3.5 preferably, probably at least Python 3.2
 2. *python3 file_dwld.py* (or *python file_dwld* depending on the symlink)
 3. Accept usage of application. If not accepted, quit.
 4. Determine download directory
-5. Input url and for each file. 
-6. Confirm the files to download. If not, go to step **8** 
-7. Download the files
-8. Ask user if they want to go again. If so, go back to step **3**. Else, quit.
+5. Input url and name for each file. 
+6. Confirm the files to download. If you answer no, go to step **5**
+7. Ask user to start downloading the files. If not, all files added in step **5** will be lost and go to step **9**  
+8. Download the files
+9. Ask user if they want to go again. If so, go back to step **3**. Else, quit.
 
 **TODO**
 - Display which files have failed to download
