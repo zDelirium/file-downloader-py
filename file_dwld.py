@@ -64,11 +64,30 @@ Get arguments for all curl commands.
 '''
 def get_all_curl_cmd_args():
     commands = []
-    user_continue_input = 'y'
 
     print('It is now time to add the files to download. If you do not want to name the file, leave its name blank. Else make sure you put the right extension at the end.')
     print('Note that for now the app does not ensure that there are no duplicate file names, so files with the same name may get overwritten.\n')
 
+    user_stops = 'n'
+    while user_stops == 'n':
+        enter_files_info(commands)
+
+        print('The program will download the following {} file(s):\n'.format(len(commands)))
+
+        # Display name of files to be downloaded
+        display_file_names(commands)
+        
+        user_stops = validate_yes_no_answer('\nConfirm that these are all the files to download. If not, you can continue adding. (y/n) ')
+        print()
+        
+    # Return all commands and nb of files
+    return commands
+
+'''
+Prompt user to enter file names and links
+'''
+def enter_files_info(commands):
+    user_continue_input = 'y'
     while user_continue_input == 'y':
         args = []
         file_nb = len(commands) + 1
@@ -102,15 +121,6 @@ def get_all_curl_cmd_args():
         user_continue_input = validate_yes_no_answer('\nDo you want to continue adding files? (y/n) ')
         print()
 
-    print('The program will download the following {} files:\n'.format(len(commands)))
-
-    # Display name of files to be downloaded
-    display_file_names(commands)
-
-    print()
-    # Return all commands and nb of files
-    return commands
-
 '''
 Display the name of all files to be downloaded to the user in 2 columns
 '''
@@ -142,7 +152,6 @@ def execute_curl(commands, download_dir):
     print('\nBegin to download all files to {}\n'.format(download_dir))
     
     # Attempt file downloads
-    # TODO Test this
     failed_file_downloads_names = []
     counter = 0
     for cmd in commands:
@@ -184,9 +193,10 @@ while user_proceed_input == 'y':
     # Prompt user to enter all args for all curl commands
     commands = get_all_curl_cmd_args()
 
-    # TODO Implement curl command (must decide between run and popen)
+    # Implement curl command (must decide between run and popen)
     # https://www.geeksforgeeks.org/curl-command-in-linux-with-examples/?ref=lbp
-    execute_curl(commands, download_dir)
+    if validate_yes_no_answer('Do you want to download now? If not, you can start from anew. (y/n) ') == 'y':
+        execute_curl(commands, download_dir)
 
     # Ask if user wants to proceed again
     user_proceed_input = validate_yes_no_answer(
