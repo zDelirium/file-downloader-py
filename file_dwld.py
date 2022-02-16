@@ -153,7 +153,10 @@ def display_file_names(commands):
 Execute all curl commands and verify their status
 '''
 def execute_curl(commands, download_dir):
-    # TODO create destination folder if it does not exist
+    # Create destination folder if it does not exist
+    if not os.path.isdir(download_dir):
+        os.makedirs(download_dir)
+        print('\nCreated new {} directory\n'.format(download_dir))
     
     print('\nBegin to download all files to {}\n'.format(download_dir))
     
