@@ -156,12 +156,12 @@ def execute_curl(commands, download_dir):
     # Create destination folder if it does not exist
     if not os.path.isdir(download_dir):
         os.makedirs(download_dir)
-        print('\nCreated new {} directory\n'.format(download_dir))
+        print('\nCreated new {} directory'.format(download_dir))
     
-    print('\nBegin to download all files to {}\n'.format(download_dir))
+    print('\nStarting to download all files to {}\n'.format(download_dir))
     
     # Attempt file downloads
-    failed_file_downloads_names = []
+    failed_commands = []
     counter = 0
     for cmd in commands:
         counter += 1
@@ -170,13 +170,16 @@ def execute_curl(commands, download_dir):
         if subprocess.Popen(cmd, cwd=download_dir).wait() == 0:
             print('Succesfully downloaded {} in {}\t({}/{})\n'.format(current_file_name, download_dir, counter, len(commands)))
         else:
-            failed_file_downloads_names.append(current_file_name)
+            failed_commands.append(cmd)
             print('Failed to download {} in {}\t({}/{})\n'.format(current_file_name, download_dir, counter, len(commands)))
             
-    # TODO Display if all downloads were successful 
-    # TODO If not, display how many files were successfully downloaded and show which ones were not   
-
-
+    # Display if all downloads were successful
+    if not failed_commands:
+        print('Successfully downloaded all files!\n') 
+    # If not, display how many files were successfully downloaded and show which ones were not   
+    else:
+        print('Successfully downloaded {}/{} files. The following files are missing:\n'.format(len(commands)-len(failed_commands), len(commands)))
+        display_file_names(failed_commands)
         
 
 '''
@@ -209,7 +212,7 @@ while user_proceed_input:
 
     # Ask if user wants to proceed again
     user_proceed_input = validate_yes_no_answer(
-        'Do you want to try again? (y/n) ')
+        '\nDo you want to try again from another directory? (y/n) ')
 
 
 display_closing_message()
