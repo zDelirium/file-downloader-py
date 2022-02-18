@@ -1,10 +1,10 @@
 import subprocess
 import os
 
-'''
-Clear console and display welcoming message
-'''
 def display_welcome_message():
+    """
+    Clear console and display welcoming message
+    """
     # Welcome message
     subprocess.run('clear')
     welcome_message = '\nHello {}!\n\nThis program will let you downloads multiple files at once in your local machine using the curl command.\n'.format(
@@ -13,11 +13,17 @@ def display_welcome_message():
     welcome_message = '{}Tip: For all yes/no answers, you can simply leave it blank to answer yes :)\n'.format(welcome_message)
     print(welcome_message)
 
-
-'''
-Validate that the user can properly answers yes/no questions. User can also answer yes by not entering anything
-'''
 def validate_yes_no_answer(init_question, yes_no_answers=['y', 'n']):
+    """
+    Validate that the user can properly answers yes/no questions. User can also answer yes by not entering anything
+
+    Args:
+        init_question (str): the question of interest
+        yes_no_answers (list, optional): answer list. Defaults to ['y', 'n'].
+
+    Returns:
+        bool: user's answer
+    """
     # Get user answer
     user_input = input(init_question).strip()
     if not user_input:
@@ -30,11 +36,13 @@ def validate_yes_no_answer(init_question, yes_no_answers=['y', 'n']):
     # Transforming to boolean        
     return user_input == yes_no_answers[0]
     
-
-'''
-Prompts user to choose the download path of the files
-'''
 def select_dlwd_path():
+    """
+    Prompts user to choose the download path of the files
+
+    Returns:
+        str: absolute path representing the intended download directory
+    """
     home_env_var = 'HOME'
     
     # Get Downloads folder directory
@@ -61,11 +69,13 @@ def select_dlwd_path():
 
     return download_dir
 
-
-'''
-Get arguments for all curl commands. 
-'''
 def get_all_curl_cmd_args():
+    """
+    Get arguments for all curl commands. 
+    
+    Returns:
+        list: all curl commands to be executed (2D list) 
+    """
     commands = []
 
     print('It is now time to add the files to download. If you do not want to name the file, leave its name blank. Else make sure you put the right extension at the end.')
@@ -87,10 +97,13 @@ def get_all_curl_cmd_args():
     # Return all commands and nb of files
     return commands
 
-'''
-Prompt user to enter file names and links
-'''
 def enter_files_info(commands):
+    """
+    Prompt user to enter file names and links
+
+    Args:
+        commands (list): all curl commands to be executed
+    """
     user_continue_input = True
     while user_continue_input:
         args = []
@@ -125,10 +138,13 @@ def enter_files_info(commands):
         user_continue_input = validate_yes_no_answer('\nDo you want to continue adding files? (y/n) ')
         print()
 
-'''
-Display the name of all files to be downloaded to the user in 2 columns
-'''
 def display_file_names(commands):
+    """
+    Display the name of all files to be downloaded to the user in 2 columns
+
+    Args:
+        commands (list): all curl commands to be executed (or have already been)
+    """
     # Get only name of files
     file_names = []
     for cmd in commands:
@@ -149,10 +165,14 @@ def display_file_names(commands):
         
         iterator += 1
 
-'''
-Execute all curl commands and verify their status
-'''
 def execute_curl(commands, download_dir):
+    """
+    Execute all curl commands and verify their status
+
+    Args:
+        commands (list): 2D list of all curl commands
+        download_dir (str): absolute path of the intended download directory
+    """
     # Create destination folder if it does not exist
     if not os.path.isdir(download_dir):
         os.makedirs(download_dir)
@@ -182,10 +202,10 @@ def execute_curl(commands, download_dir):
         display_file_names(failed_commands)
         
 
-'''
-Display closing message
-'''
 def display_closing_message():
+    """
+    Display closing message
+    """
     print("\n\nSee you next time!\n\n")
 
 
