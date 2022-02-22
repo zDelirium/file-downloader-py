@@ -20,5 +20,6 @@ Runs on Python 3.5 preferably, probably at least Python 3.2
 9. Ask user if they want to go again. If so, go back to step **3**. Else, quit.
 
 **TODO**
+- Refactor because 1 single file is messy to work through
 - Perhaps make a stronger check for the validity of the url link
 - Make it a GUI app (**very big maybe?**)

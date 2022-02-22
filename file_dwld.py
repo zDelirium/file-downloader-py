@@ -25,11 +25,11 @@ def validate_yes_no_answer(init_question, yes_no_answers=['y', 'n']):
         bool: user's answer
     """
     # Get user answer
-    user_input = input(init_question).strip()
+    user_input = input(init_question).strip().casefold()
     if not user_input:
         user_input = yes_no_answers[0]
     while user_input not in yes_no_answers:
-        user_input = input('Please enter \'y\' (yes) or \'n\' (no): ').strip()
+        user_input = input('Please enter \'y\' (yes) or \'n\' (no): ').strip().casefold()
         if not user_input:
             user_input = yes_no_answers[0]
     
